@@ -104,7 +104,7 @@
             app:layout_constraintVertical_chainStyle="spread_inside">
 
             <EditText
-                android:id="@+id/fund_amount_edit_text"
+                android:id="@+id/auction_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
