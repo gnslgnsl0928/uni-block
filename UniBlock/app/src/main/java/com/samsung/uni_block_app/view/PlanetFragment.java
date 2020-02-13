@@ -145,26 +145,23 @@ public class PlanetFragment extends Fragment {
                 String encodedFunction = FunctionEncoder.encode(changePrice);
 
                 try {
-                    ethereumService.sendSmartContractTransaction(hardwareWallet, account, "0x054fF5ce3aC2D2B3DC42a348a0fd48f8FB13b928"
+                    ethereumService.sendSmartContractTransaction(hardwareWallet, account, "0x43f62a7c82A8c3ca4f36Ef34314dA0E7aE8b18Fb"
                             , BigInteger.valueOf(20000000000L)
                             , BigInteger.valueOf(80000)
                             , encodedFunction
-                            , BigInteger.valueOf(Long.parseLong(editText.getText().toString()) * 10^18)
+                            , BigInteger.valueOf(Long.parseLong(editText.getText().toString()) * (long) Math.pow(10, 18))
                             , null
                     ).setCallback(new ListenableFutureTask.Callback<TransactionResult>() {
                         @Override
                         public void onSuccess(TransactionResult transactionResult) {
-
                         }
 
                         @Override
                         public void onFailure(@NotNull ExecutionException e) {
-
                         }
 
                         @Override
                         public void onCancelled(@NotNull InterruptedException e) {
-
                         }
                     });
                 } catch (AvailabilityException e) {
