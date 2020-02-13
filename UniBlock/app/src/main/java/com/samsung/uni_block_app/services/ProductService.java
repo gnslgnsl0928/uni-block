@@ -24,40 +24,40 @@ public class ProductService {
         String sellerAddress = "0x59B8B4238D8cBdA87046df15a6eF2815CD807C80";
         productListRaw.add(new ProductModel(
                 1,
-                "Galaxy Note10",
-                "Introducing next-level power with Galaxy Note10.",
-                R.drawable.dashboard,
+                "Saturn",
+                "Beautiful Planet",
+                R.drawable.saturn,
                 3.2, sellerAddress
         ));
         productListRaw.add(new ProductModel(
                 2,
-                "Galaxy S10",
-                "Introducing next-level power with Galaxy S10.",
-                R.drawable.wallet,
+                "Jupiter",
+                "Beautiful Planet",
+                R.drawable.jupiter,
                 3.0,
                 sellerAddress
         ));
         productListRaw.add(new ProductModel(
                 3,
-                "Galaxy Watch Active",
-                "Introducing next-level power with Galaxy Watch Active.",
-                R.drawable.ether,
+                "Mars",
+                "Beautiful Planet",
+                R.drawable.mars,
                 0.28,
                 sellerAddress
         ));
         productListRaw.add(new ProductModel(
                 4,
-                "Galaxy Fit",
-                "Introducing next-level power with Galaxy Fit.",
-                R.drawable.galaxy_fit,
+                "Earth",
+                "Beautiful Planet",
+                R.drawable.earth,
                 0.15,
                 sellerAddress
         ));
         productListRaw.add(new ProductModel(
                 5,
-                value,
-                "Introducing next-level power with Galaxy Fit.",
-                R.drawable.galaxy_fit,
+                "Moon",
+                "Beautiful Planet",
+                R.drawable.moon,
                 0.15,
                 sellerAddress
         ));

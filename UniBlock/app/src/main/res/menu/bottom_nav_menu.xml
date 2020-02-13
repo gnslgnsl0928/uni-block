@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_marketplace"
         android:icon="@drawable/ic_marketplace_black_24dp"
-        android:title="@string/title_mobile_dapp" />
+        android:title="Auction" />
 
     <item
         android:id="@+id/navigation_dapp"

@@ -71,7 +71,7 @@ public class NavigationActivity extends AppCompatActivity {
                     launchFragment(new MobiDAppMarketplaceFragment());
                     return true;
                 case R.id.navigation_dapp:
-                    launchFragment(new WebDAppMarketPlaceFragment());
+                    launchFragment(new MobiDAppMarketplaceFragment());
                     return true;
                 case R.id.navigation_transfer:
                     launchFragment(new TransactionFragment());

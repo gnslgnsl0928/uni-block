@@ -72,7 +72,7 @@ public class MobiDAppMarketplaceFragment extends Fragment {
         super.onViewCreated(view, saveInstanceState);
 
         Log.i(Util.LOG_TAG, "Getting product list from viewModel.");
-        ArrayList<ProductModel> productList = mProductViewModel.getPlanetList(getDefaultAccountInfo(), "0x054fF5ce3aC2D2B3DC42a348a0fd48f8FB13b928");
+        ArrayList<ProductModel> productList = mProductViewModel.getPlanetList(getDefaultAccountInfo(), "0x054fF5ce3aC2D2B3DC42a348a0fd48f8FB13b928", "car");
 
         RecyclerView productRecyclerView = getView().findViewById(R.id.product_recyclerview);
 

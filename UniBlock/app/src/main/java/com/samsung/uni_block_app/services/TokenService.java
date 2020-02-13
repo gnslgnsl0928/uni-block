@@ -113,6 +113,39 @@ public class TokenService {
         }
     }
 
+    public String  getPlanetList
+            (EthereumAccount ethereumAccount, String tokenContractAddress) {
+        List<Type> inputParameters = Arrays.asList();
+        List outputParameters = Arrays.asList(
+                new TypeReference<Utf8String>() {
+                }
+        );
+        Function getPrice = new Function("getPrice", inputParameters, outputParameters);
+        String encodedFunction = FunctionEncoder.encode(getPrice);
+        final String[] value = new String[1];
+
+        try {
+            ethereumService.callSmartContractFunction(ethereumAccount, tokenContractAddress, encodedFunction).setCallback(new ListenableFutureTask.Callback<String>() {
+                @Override
+                public void onSuccess(String s) {
+                    value[0] = s;
+                }
+
+                @Override
+                public void onFailure(@NotNull ExecutionException e) {
+                }
+
+                @Override
+                public void onCancelled(@NotNull InterruptedException e) {
+                }
+            });
+            Thread.sleep(2000);
+        } finally {
+            List<Type> list = FunctionReturnDecoder.decode(value[0], outputParameters);
+            return list.get(0).getValue().toString();
+        }
+    }
+
     public boolean isAddressValid(String tokenAddress) {
         if (tokenAddress == null) return false;
         else return ethereumService.isValidAddress(tokenAddress);
