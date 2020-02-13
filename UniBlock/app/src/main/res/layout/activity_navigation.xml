@@ -45,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="96dp"
         android:background="@color/welcomePageBackground"
-        android:indeterminateTint="@color/text_color_balance"
+        android:indeterminateTint="@color/orangePrimary"
         android:paddingTop="10dp"
         android:paddingBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/accountChooserSpinner"

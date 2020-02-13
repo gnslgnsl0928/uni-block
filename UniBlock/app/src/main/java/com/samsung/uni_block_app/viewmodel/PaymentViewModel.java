@@ -28,4 +28,12 @@ public class PaymentViewModel extends AndroidViewModel {
                 (getApplication(), fromAccount, toAddress, productPrice, data, nonce);
         return buyWebDAppProductIntent;
     }
+
+    public Intent getSmartContractPaymentIntent(EthereumAccount fromAccount, String toAddress, BigInteger productPrice
+            , String data, BigInteger nonce) {
+        Log.i(Util.LOG_TAG, "Calling payment sheet intent service for Dapp.");
+        Intent buyWebDAppProductIntent = mPaymentService.buildDappProductPaymentSheet
+                (getApplication(), fromAccount, toAddress, productPrice, data, nonce);
+        return buyWebDAppProductIntent;
+    }
 }

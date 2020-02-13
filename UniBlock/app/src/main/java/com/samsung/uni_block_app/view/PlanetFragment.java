@@ -1,6 +1,7 @@
 package com.samsung.uni_block_app.view;
 
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,17 +9,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.samsung.android.sdk.blockchain.ListenableFutureTask;
+import com.samsung.android.sdk.blockchain.account.ethereum.EthereumAccount;
+import com.samsung.android.sdk.blockchain.coinservice.TransactionResult;
+import com.samsung.android.sdk.blockchain.coinservice.ethereum.EthereumService;
+import com.samsung.android.sdk.blockchain.exception.AvailabilityException;
+import com.samsung.android.sdk.blockchain.wallet.HardwareWallet;
 import com.samsung.uni_block_app.R;
 import com.samsung.uni_block_app.model.HardwareWalletTypeModel;
+import com.samsung.uni_block_app.services.SBPManager;
 import com.samsung.uni_block_app.util.Util;
 import com.samsung.uni_block_app.viewmodel.AccountInformationViewModel;
 import com.samsung.uni_block_app.viewmodel.SetupViewModel;
@@ -26,28 +36,52 @@ import com.samsung.uni_block_app.viewmodel.TransactionViewModel;
 import com.samsung.android.sdk.blockchain.account.Account;
 import com.samsung.android.sdk.blockchain.wallet.HardwareWalletType;
 
+import org.jetbrains.annotations.NotNull;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.generated.Uint256;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashboardFragment extends Fragment {
+public class PlanetFragment extends Fragment {
 
     private AccountInformationViewModel mAccountInformationViewModel;
     private TransactionViewModel mTransactionViewModel;
     private SetupViewModel mSetupViewModel;
 
     private ProgressBar balanceProgressBar;
+    String name;
+    String detail;
+    int image;
+    double price;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (getArguments() != null) {
+            name = getArguments().getString("name");
+            detail = getArguments().getString("detail");
+            image = getArguments().getInt("image");
+            price = getArguments().getDouble("price");
+        }
+
         //Always pass activity instead of fragment since parent activity stays alive even if fragment is switched.
         mAccountInformationViewModel = ViewModelProviders.of(getActivity()).get(AccountInformationViewModel.class);
         mTransactionViewModel = ViewModelProviders.of(getActivity()).get(TransactionViewModel.class);
         mSetupViewModel = ViewModelProviders.of(getActivity()).get(SetupViewModel.class);
-        return inflater.inflate(R.layout.fragment_dashboard, container, false);
+        return inflater.inflate(R.layout.planet_fragment, container, false);
     }
 
     @Override
@@ -57,6 +91,9 @@ public class DashboardFragment extends Fragment {
         TextView balanceTextView = view.findViewById(R.id.balance_textview);
         TextView balanceUnitTextView = view.findViewById(R.id.balance_unit);
         TextView hardwareWalletTextView = view.findViewById(R.id.hardware_wallet_textview);
+        TextView inforTextView = view.findViewById(R.id.planetinfor);
+        ImageView imageView = view.findViewById(R.id.planetimageView);
+
 //        TextView selectedNetworkTestView = view.findViewById(R.id.network_textview);
 //
 //        selectedNetworkTestView.setText(mSetupViewModel.getCoinNetworkInfo().getNetworkType().toString());
@@ -72,6 +109,9 @@ public class DashboardFragment extends Fragment {
             hardwareWalletTextView.setText(hardWalletTypeModel.get(2).getName());
         }
 
+        balanceTextView.setText(name);
+        inforTextView.setText(detail);
+        imageView.setImageResource(image);
 
         balanceUnitTextView.setText(mAccountInformationViewModel.getCoinNetworkInfo().getCoinType().toString());
         balanceProgressBar = view.findViewById(R.id.balance_progressbar);
@@ -88,38 +128,49 @@ public class DashboardFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchFragment(new TransactionFragment());
-                //hard coded changed bottom navigation selected fragment.
-                BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
-                navView.getMenu().getItem(3).setChecked(true);
-            }
-        });
 
-        ImageButton refreshBalanceButton = view.findViewById(R.id.balance_refresh_button);
-        refreshBalanceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fetchBalanceRequest(mAccountInformationViewModel.getSelectedAccount().getValue(), refreshBalanceButton);
-            }
-        });
+                EthereumService ethereumService = (EthereumService) SBPManager.getInstance().getCoinService();
+                HardwareWallet hardwareWallet = SBPManager.getInstance().getHardwareWallet();
+                MutableLiveData<Account> accounts = mAccountInformationViewModel.getSelectedAccount();
+                EthereumAccount account = (EthereumAccount) accounts.getValue();
 
-        //mAccountInformationViewModel.getSelectedAccount() returns MutableLiveData<Account>
-        mAccountInformationViewModel.getSelectedAccount().observe(this, account -> {
-            Log.i(Util.LOG_TAG, "Default Account Changed. Default Account HD Path: " + account.getHdPath());
-            //Account HD Path and Address displayed using databinding
-            fetchBalanceRequest(account, refreshBalanceButton);
-        });
+                List<Type> inputParameters = Arrays.asList(new Utf8String("car"), new Uint256(777));
+                List outputParameters = Arrays.asList(
+                        new TypeReference<Utf8String>() {
+                        }
+                );
+                Function changePrice = new Function("changePrice", inputParameters, outputParameters);
+                String encodedFunction = FunctionEncoder.encode(changePrice);
 
-        mTransactionViewModel.getBalanceFetchFlag().observe(this, responseValue -> {
-            if (responseValue == Util.POSITIVE_RESPONSE) {
-                UIUtil.displayBalance(mTransactionViewModel.getBalance(), balanceTextView, refreshBalanceButton, balanceProgressBar);
-            } else if (responseValue == Util.NEGATIVE_RESPONSE) {
-                UIUtil.displayBalance("", balanceTextView, refreshBalanceButton, balanceProgressBar);
-                AlertUtil.showAlertDialog(getActivity(), "Could not refresh balance. \n" + Util.CONNECTION_ERROR);
+                try {
+                    ethereumService.sendSmartContractTransaction(hardwareWallet, account, "0x054fF5ce3aC2D2B3DC42a348a0fd48f8FB13b928"
+                            , BigInteger.valueOf(20000000000L)
+                            , BigInteger.valueOf(80000)
+                            , encodedFunction
+                            , null
+                            , null
+                    ).setCallback(new ListenableFutureTask.Callback<TransactionResult>() {
+                        @Override
+                        public void onSuccess(TransactionResult transactionResult) {
+
+                        }
+
+                        @Override
+                        public void onFailure(@NotNull ExecutionException e) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NotNull InterruptedException e) {
+
+                        }
+                    });
+                } catch (AvailabilityException e) {
+                }
             }
-            Util.neutralizeConsumedFlag(mTransactionViewModel.getBalanceFetchFlag());
         });
     }
+
 
     private void launchFragment(Fragment fragmentToBeLaunched) {
         Log.i(Util.LOG_TAG, "Launching " + fragmentToBeLaunched.getClass().getSimpleName());

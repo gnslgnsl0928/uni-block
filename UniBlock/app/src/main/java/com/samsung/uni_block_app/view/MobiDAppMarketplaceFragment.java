@@ -72,7 +72,7 @@ public class MobiDAppMarketplaceFragment extends Fragment {
         super.onViewCreated(view, saveInstanceState);
 
         Log.i(Util.LOG_TAG, "Getting product list from viewModel.");
-        ArrayList<ProductModel> productList = mProductViewModel.getProductList(getDefaultAccountInfo(), "0x560f69B384711A2452Fd04E0A0C52b58a117D513", "car");
+        ArrayList<ProductModel> productList = mProductViewModel.getPlanetList(getDefaultAccountInfo(), "0x054fF5ce3aC2D2B3DC42a348a0fd48f8FB13b928");
 
         RecyclerView productRecyclerView = getView().findViewById(R.id.product_recyclerview);
 
@@ -83,26 +83,39 @@ public class MobiDAppMarketplaceFragment extends Fragment {
         ProductAdapter.OnItemClickListener productClickListener = new ProductAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(ProductModel productModel, View productView) {
-                String toAddress = productModel.getSellerAddress();
-                // Converting Ether to Wei.
-                BigInteger productPrice = Convert.toWei("" + productModel.getProductPrice(), Convert.Unit.ETHER).toBigInteger();
 
-                //checking network connection.
-                Log.d(Util.LOG_TAG, "Checking Network connection");
-                    Log.i(Util.LOG_TAG, "Calling payment sheet intent for Mobile Dapp.");
-                    if(getDefaultAccountInfo() == null){
-                        Log.e(Util.LOG_TAG, "Selected account value is null.");
-                        Toast.makeText(getContext(), "Loading Accounts.Please Wait...", Toast.LENGTH_SHORT).show();
-                    }else if(toAddress == null){
-                        Log.e(Util.LOG_TAG, "Receiver account value not found.");
-                    }else if(productPrice == null){
-                        Log.e(Util.LOG_TAG, "Product amount not found.");
-                    } else{
-                        Intent mobileDappPaymentSheetIntent = mPaymentViewModel.getDAppPaymentIntent(getDefaultAccountInfo(), toAddress, productPrice, null, null);
-                        //Launching payment sheet intent
-                        Log.i(Util.LOG_TAG, "Launching Payment Sheet Intent for Mobile Dapp.");
-                        startActivityForResult(mobileDappPaymentSheetIntent, 0);
-                    }
+                PlanetFragment fragment = new PlanetFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("name", productModel.getProductName());
+                bundle.putInt("image", productModel.getProductImage());
+                bundle.putString("detail", productModel.getProductDetails());
+                bundle.putDouble("price", productModel.getProductPrice());
+                fragment.setArguments(bundle);
+
+                launchFragment(fragment);
+//
+//
+//                String toAddress = productModel.getSellerAddress();
+//                // Converting Ether to Wei.
+//                BigInteger productPrice = Convert.toWei("" + productModel.getProductPrice(), Convert.Unit.ETHER).toBigInteger();
+//
+//                //checking network connection.
+//                Log.d(Util.LOG_TAG, "Checking Network connection");
+//                    Log.i(Util.LOG_TAG, "Calling payment sheet intent for Mobile Dapp.");
+//                    if(getDefaultAccountInfo() == null){
+//                        Log.e(Util.LOG_TAG, "Selected account value is null.");
+//                        Toast.makeText(getContext(), "Loading Accounts.Please Wait...", Toast.LENGTH_SHORT).show();
+//                    }else if(toAddress == null){
+//                        Log.e(Util.LOG_TAG, "Receiver account value not found.");
+//                    }else if(productPrice == null){
+//                        Log.e(Util.LOG_TAG, "Product amount not found.");
+//                    } else{
+//                        Intent mobileDappPaymentSheetIntent = mPaymentViewModel.getDAppPaymentIntent(getDefaultAccountInfo(), toAddress, productPrice, null, null);
+//                        //Launching payment sheet intent
+//                        Log.i(Util.LOG_TAG, "Launching Payment Sheet Intent for Mobile Dapp.");
+//                        startActivityForResult(mobileDappPaymentSheetIntent, 0);
+//                    }
             }
         };
 
@@ -155,5 +168,10 @@ public class MobiDAppMarketplaceFragment extends Fragment {
         Log.i(Util.LOG_TAG, "Getting default account.");
         MutableLiveData<Account> accounts = mAccountInformationViewModel.getSelectedAccount();
         return (EthereumAccount) accounts.getValue();
+    }
+
+    private void launchFragment(Fragment fragmentToBeLaunched) {
+        Log.i(Util.LOG_TAG, "Launching " + fragmentToBeLaunched.getClass().getSimpleName());
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentToBeLaunched).commit();
     }
 }

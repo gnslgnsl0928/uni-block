@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ProductViewModel extends AndroidViewModel {
 
-    private ArrayList<ProductModel> productList;
+    private ArrayList<ProductModel> planetList;
 
     private ProductService mProductService = new ProductService();
 
@@ -23,12 +23,12 @@ public class ProductViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public ArrayList<ProductModel> getProductList(EthereumAccount account, String contract, String name) {
+    public ArrayList<ProductModel> getPlanetList(EthereumAccount account, String contract, String name) {
         Log.i(Util.LOG_TAG, "Calling service for product list.");
-        if (productList == null) {
-            productList = mProductService.getProductList(account,contract, name);
+        if (planetList == null) {
+            planetList = mProductService.getProductList(account,contract, name);
         }
-        return productList;
+        return planetList;
     }
 
 }

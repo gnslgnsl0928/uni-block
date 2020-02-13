@@ -26,14 +26,14 @@ public class ProductService {
                 1,
                 "Galaxy Note10",
                 "Introducing next-level power with Galaxy Note10.",
-                R.drawable.note10,
+                R.drawable.dashboard,
                 3.2, sellerAddress
         ));
         productListRaw.add(new ProductModel(
                 2,
                 "Galaxy S10",
                 "Introducing next-level power with Galaxy S10.",
-                R.drawable.s10,
+                R.drawable.wallet,
                 3.0,
                 sellerAddress
         ));
@@ -41,7 +41,7 @@ public class ProductService {
                 3,
                 "Galaxy Watch Active",
                 "Introducing next-level power with Galaxy Watch Active.",
-                R.drawable.active_watch,
+                R.drawable.ether,
                 0.28,
                 sellerAddress
         ));
