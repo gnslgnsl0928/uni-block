@@ -35,7 +35,7 @@ public class AccountAdapter extends ArrayAdapter {
         Account currentAccount = (Account) getItem(0);
 
         //Set Account Details on UI
-        accountHDPath.setText(currentAccount.getHdPath());
+        accountHDPath.setText("");
         accountPublicAddress.setText(currentAccount.getAddress());
         return convertView;
     }
@@ -54,7 +54,7 @@ public class AccountAdapter extends ArrayAdapter {
         Account currentAccount = (Account) getItem(position);
 
         //Set Account Details on UI
-        accountHDPath.setText(currentAccount.getHdPath());
+        accountHDPath.setText("");
         accountPublicAddress.setText(currentAccount.getAddress());
         return convertView;
     }

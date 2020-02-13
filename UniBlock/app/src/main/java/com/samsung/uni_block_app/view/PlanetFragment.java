@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -93,6 +94,7 @@ public class PlanetFragment extends Fragment {
         TextView hardwareWalletTextView = view.findViewById(R.id.hardware_wallet_textview);
         TextView inforTextView = view.findViewById(R.id.planetinfor);
         ImageView imageView = view.findViewById(R.id.planetimageView);
+        EditText editText = view.findViewById(R.id.auction_edit_text);
 
 //        TextView selectedNetworkTestView = view.findViewById(R.id.network_textview);
 //
@@ -147,7 +149,7 @@ public class PlanetFragment extends Fragment {
                             , BigInteger.valueOf(20000000000L)
                             , BigInteger.valueOf(80000)
                             , encodedFunction
-                            , null
+                            , BigInteger.valueOf(Long.parseLong(editText.getText().toString()) * 10^18)
                             , null
                     ).setCallback(new ListenableFutureTask.Callback<TransactionResult>() {
                         @Override
