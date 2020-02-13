@@ -72,7 +72,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/balance_textview"
-            app:srcCompat="@drawable/wallet" />
+            app:srcCompat="@drawable/dashboard" />
 
         <Button
             android:id="@+id/send_button"

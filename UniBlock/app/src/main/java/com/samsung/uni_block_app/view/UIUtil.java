@@ -67,7 +67,7 @@ public class UIUtil {
     public static void setButtonEnabled(Button button, boolean isButtonEnabled) {
         Activity parentActivityOfButton = (Activity) button.getContext();
         if (isButtonEnabled) {
-            button.setBackgroundTintList(ColorStateList.valueOf(parentActivityOfButton.getColor(R.color.orangePrimary)));
+            button.setBackgroundTintList(ColorStateList.valueOf(parentActivityOfButton.getColor(R.color.text_color_balance)));
         } else {
             button.setBackgroundTintList(ColorStateList.valueOf(Color.LTGRAY));
         }

@@ -80,7 +80,7 @@
             android:id="@+id/product_purchase_button"
             android:layout_width="50dp"
             android:layout_height="0dp"
-            android:background="@drawable/outline_semi_ellipse"
+            android:background="@color/text_color_balance"
             android:src="@drawable/product_purches_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
