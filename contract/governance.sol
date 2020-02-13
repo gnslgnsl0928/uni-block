@@ -170,6 +170,16 @@ contract Governance {
         auctionKey++;
     }
     
+    function getAuctions() public view returns (string[] memory) {
+        string[] memory auctionArr = new string[](auctionKey-1);
+        for(uint256 i=0; i<auctionKey-1; i++) {
+            auctionArr[i] = auctionKeyToPName[i+1];
+        }
+        
+        return auctionArr;
+    }
+    
+    
     function getAuction(string memory planetName) public view returns (Auction){
         return auctions[planetName];
     }
@@ -216,7 +226,6 @@ contract Auction {
 
     Models.Planet _planet;
     uint256 _biddingDeadline;
-    uint256 _proofBiddingDeadline;
     uint256 _revealTime;
     
     mapping(address => bytes32) _bidderAmount;
@@ -231,7 +240,6 @@ contract Auction {
         //_userInfoContractAddr = userInfoContractAddr;
         _planet = planet;
         _biddingDeadline = deadline;
-        _proofBiddingDeadline = deadline + 3*Day;
         _revealTime = revealTime;
     }
     
@@ -246,20 +254,23 @@ contract Auction {
     }
     
     function bidding(bytes32 amount) public {
+        /*
         require(
             _biddingDeadline > now,
             "deadline is finished"
         );
-        
+        */
         _bidderAmount[msg.sender] = amount;
     }
     
     
     function proofMyBidding(string memory secret, uint256 value) public {
+        /*
         require(
-            _proofBiddingDeadline < now,
+            _revealTime < now,
             "deadline is finished"
         );
+        */
         
         bytes32 biddinghash1 = keccak256(abi.encodePacked(secret, uint2str(value)));
         bytes32 biddinghash2 = _bidderAmount[msg.sender];
@@ -299,7 +310,8 @@ contract Auction {
         return _galaxy;
     }
     
-    function genGalaxy(string memory name, string memory symbol, uint256 value) payable public returns (Galaxy) {
+    function genGalaxy(string memory name, string memory symbol) payable public returns (Galaxy) {
+        /*
         require(
             msg.sender == _highestBidder &&
             address(_galaxy) == address(0) &&
@@ -307,6 +319,7 @@ contract Auction {
             _proofBiddingDeadline > now,
             "not permissioned"
         );
+        */
         Galaxy g = new Galaxy(name, symbol, msg.sender, address(this));
         g.setDeposit.value(_highestAmount)();
         _galaxy = g;
